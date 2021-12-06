@@ -1,30 +1,42 @@
 class Version:
     def __init__(self, version):
-        self.version = version
+        self.version = self._change_version(version)
+
+    @staticmethod
+    def _replace_stages_of_development(version):
+        if 'a' in version and '-' not in version:
+            version = version.replace('a', '-alpha')
+        elif 'b' in version and '-' not in version:
+            version = version.replace('b', '-beta')
+        elif 'rc' in version and '-' not in version:
+            version = version.replace('rc', '-rc')
+        return version
+
+    def _change_version(self, version):
+        if 'a' or 'b' or 'rc' in version:
+            version = self._replace_stages_of_development(version)
+        if '-' in version:
+            version = version.replace('-', '.')
+        change_version = version.split('.')
+        return change_version
 
     def __eq__(self, other):
-        print(" __eq__ called")
         return self.version == other.version
 
-    def __ne__(self, other):
-        print(" __ne__ called")
-        return self.version != other.version
-
     def __lt__(self, other):
-        print(" __lt__ called")
-        return self.version < other.version
-
-    def __le__(self, other):
-        print('__le__called')
-        return self.version <= other.version
-
-    def __gt__(self, other):
-        print(" __gt__ called")
-        return self.version > other.version
-
-    def __ge__(self, other):
-        print(" __ge__ called")
-        return self.version >= other.version
+        version_self = self.version[:3]
+        stage_self = self.version[3:]
+        version_other = other.version[:3]
+        stage_other = other.version[3:]
+        if version_self == version_other:
+            if stage_self == []:
+                return False
+            elif stage_other == []:
+                return True
+            else:
+                return stage_self < stage_other
+        else:
+            return version_self < version_other
 
 
 def main():
@@ -45,3 +57,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+    print(Version('1.1.3') < Version('2.2.3'))
+    print(Version('1.3.0') > Version('0.3.0'))
+    print(Version('0.3.0b') < Version('1.2.42'))
+    print(Version('1.3.42') == Version('42.3.1'))
