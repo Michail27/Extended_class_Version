@@ -1,3 +1,7 @@
+from functools import total_ordering
+
+
+@total_ordering
 class Version:
     """
     This class compares different versions of programs
@@ -38,10 +42,6 @@ class Version:
         else:
             return self.stage_self < self.stage_self
 
-    def __le__(self, other):
-        return self.__lt__(self) or self.__eq__(self)
-
-
 
 def main():
     to_test = [
@@ -61,6 +61,5 @@ def main():
 
 if __name__ == "__main__":
     main()
-    # print(Version('1') >= Version('1'))
 
 
