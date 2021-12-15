@@ -11,28 +11,26 @@ class Version:
 
     @staticmethod
     def _replace_stages_of_development(version):
-        if 'a' in version:
-            version = version.replace('a', '-alpha')
-        elif 'b' in version:
-            version = version.replace('b', '-beta')
-        else:
-            version = version.replace('rc', '-rc')
+        literals = (('a', '-alpha'), ('b', '-beta'), ('r', '-rc'))
+        for s in literals:
+            version = version.replace(*s)
         return version
 
     def _change_version(self, version):
-        if ('-' not in version) and ('a' in version or 'b' in version or 'rc' in version):
+        if '-' not in version:
             version = self._replace_stages_of_development(version)
         if '-' in version:
             version = version.replace('-', '.')
         change_version = version.split('.')
-        version_self = change_version[:3]
+        version_self = list(map(int, change_version[:3]))
         stage_self = change_version[3:]
-        return change_version, version_self, stage_self
+        return version, version_self, stage_self
 
     def __eq__(self, other):
         return self.version == other.version
 
     def __lt__(self, other):
+
         if self.version_self != other.version_self:
             return self.version_self < other.version_self
         if self.stage_self == []:
@@ -61,5 +59,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+    print(Version('1.9') < Version('1.11'))
 
 
