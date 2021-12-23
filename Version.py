@@ -33,12 +33,12 @@ class Version:
 
         if self.version_self != other.version_self:
             return self.version_self < other.version_self
-        if self.stage_self == []:
+        elif self.stage_self == []:
             return False
         elif other.stage_self == []:
             return True
         else:
-            return self.stage_self < self.stage_self
+            return self.stage_self < other.stage_self
 
 
 def main():
@@ -60,6 +60,6 @@ def main():
 if __name__ == "__main__":
     main()
 
-    print(Version('1.9') < Version('1.11'))
+    print(Version('1.9.0') < Version('1.11'))
 
 
